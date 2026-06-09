@@ -1,0 +1,154 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-text: #b8c4bc;
+  --color-text-h: #e8fff4;
+  --color-text-muted: #7a8a82;
+  --color-bg: #0f1412;
+  --color-surface: #171f1b;
+  --color-surface-raised: #1e2823;
+  --color-border: #2a3830;
+  --color-accent: #ffb000;
+  --color-accent-dim: #cc8c00;
+  --color-accent-bg: rgba(255, 176, 0, 0.12);
+  --color-accent-border: rgba(255, 176, 0, 0.45);
+  --color-phosphor: #5dff9a;
+  --color-danger: #ff8888;
+  --color-info: #88c4ff;
+  --font-sans: 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, 'Courier New', monospace;
+  --shadow-card: 0 12px 24px -8px rgba(0, 0, 0, 0.35);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply box-border;
+  }
+
+  body {
+    @apply m-0 min-h-svh font-sans text-base leading-normal text-text antialiased;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255, 176, 0, 0.08), transparent 40%),
+      radial-gradient(circle at 80% 100%, rgba(93, 255, 154, 0.06), transparent 35%),
+      var(--color-bg);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  #root {
+    @apply min-h-svh;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold tracking-tight text-text-h;
+  }
+
+  h1 {
+    @apply m-0 mb-4 text-[clamp(2rem,5vw,3rem)] leading-tight;
+  }
+
+  h2 {
+    @apply m-0 mb-3 text-[1.35rem];
+  }
+
+  h3 {
+    @apply m-0 mb-1.5 text-[1.05rem];
+  }
+
+  p {
+    @apply m-0;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    @apply font-[inherit];
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  a {
+    @apply text-accent;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply rounded-md border border-border bg-surface px-4 py-2.5 text-text-h transition-[border-color,background-color] duration-150 hover:border-accent-border disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply border-accent bg-accent font-semibold text-bg hover:border-accent-dim hover:bg-accent-dim disabled:opacity-45;
+  }
+
+  .btn-ghost {
+    @apply mt-2 w-full border-transparent bg-transparent text-text-muted;
+  }
+
+  .btn-sm {
+    @apply px-2.5 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-5 py-3;
+  }
+
+  .filter-chip {
+    @apply rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm text-text;
+  }
+
+  .filter-chip-active {
+    @apply border-accent-border bg-accent-bg text-accent;
+  }
+
+  .form-label {
+    @apply mb-3.5 flex flex-col gap-1.5 text-sm text-text-muted;
+  }
+
+  .form-input {
+    @apply rounded-md border border-border bg-bg px-3 py-2.5 text-text-h;
+  }
+
+  .form-row {
+    @apply grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-3;
+  }
+
+  .panel {
+    @apply rounded-xl border border-border bg-surface;
+  }
+
+  .status-pill {
+    @apply rounded-full px-2 py-0.5 font-mono text-xs uppercase;
+  }
+
+  .status-pill-pending {
+    @apply bg-accent-bg text-accent;
+  }
+
+  .status-pill-paid {
+    @apply bg-phosphor/15 text-phosphor;
+  }
+
+  .status-pill-processing {
+    @apply bg-info/15 text-info;
+  }
+
+  .status-pill-shipped {
+    @apply bg-phosphor/20 text-phosphor;
+  }
+
+  .status-pill-cancelled {
+    @apply bg-danger/12 text-danger;
+  }
+}
