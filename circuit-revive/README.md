@@ -144,6 +144,65 @@ At `/admin` (admin role only):
 | `SUPABASE_SERVICE_ROLE_KEY` | Optional | For `npm run seed` only — never expose in frontend |
 | `DATABASE_URL` | Optional | Postgres URI for `npm run migrate` |
 
+## Deploy to Cloudflare Pages
+
+The frontend is a static Vite build. Supabase stays your backend — Cloudflare only hosts the React app.
+
+### 1. Connect the repo
+
+1. Push to GitHub.
+2. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+3. Select this repository and use these build settings:
+
+| Setting | Value |
+|---------|--------|
+| Root directory | `circuit-revive` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+
+4. Add environment variables for **Production** (same as local `.env`):
+
+   ```env
+   VITE_SUPABASE_URL=https://xxxx.supabase.co
+   VITE_SUPABASE_ANON_KEY=eyJ...
+   ```
+
+5. Set **Node.js version** — add variable `NODE_VERSION` = `20` if the build fails.
+
+6. Deploy. Your site will be at `https://<project-name>.pages.dev`.
+
+Client-side routing is handled by `public/_redirects` (copied into `dist/` on build).
+
+### 2. Configure Supabase auth
+
+In **Supabase → Authentication → URL Configuration**, set:
+
+- **Site URL:** `https://<project-name>.pages.dev`
+- **Redirect URLs:** `https://<project-name>.pages.dev/**`
+
+Update these again if you add a custom domain on Cloudflare.
+
+### 3. Post-deploy checklist
+
+- Home page loads
+- Refresh on `/shop/c64` and `/account` works (no 404)
+- Sign in / sign up works
+- Checkout creates an order
+- Admin panel works for your admin account
+
+### CLI deploy (optional)
+
+```bash
+cd circuit-revive
+npm install
+npm run build
+npx wrangler pages deploy dist --project-name=circuit-revive
+```
+
+Set `VITE_SUPABASE_*` in your shell before `npm run build`, or use dashboard env vars with Git-connected deploys instead.
+
+**Do not** put `SUPABASE_SERVICE_ROLE_KEY` in Cloudflare — use it locally only for `npm run seed` and `npm run migrate`.
+
 ## Next steps
 
 - Automated invoice emails on new orders (Supabase triggers + Resend/SendGrid)
