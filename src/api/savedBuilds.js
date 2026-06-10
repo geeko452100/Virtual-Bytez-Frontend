@@ -51,6 +51,14 @@ export async function deleteSavedBuild(id) {
   const supabase = getSupabase()
   if (!supabase) return { error: new Error('Supabase not configured') }
 
-  const { error } = await supabase.from('saved_builds').delete().eq('id', id)
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser()
+  if (userError || !user) {
+    return { error: userError ?? new Error('Not authenticated') }
+  }
+
+  const { error } = await supabase.from('saved_builds').delete().eq('id', id).eq('user_id', user.id)
   return { error }
 }

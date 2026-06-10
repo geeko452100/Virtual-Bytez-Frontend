@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { deleteSavedBuild, fetchSavedBuilds } from '../api/savedBuilds'
 import { fetchUserOrders } from '../api/orders'
 import { useAuth } from '../hooks/useAuth'
@@ -13,7 +13,9 @@ import OrderTrackingPanel from '../components/orders/OrderTrackingPanel'
 export default function AccountPage() {
   const { profile, user } = useAuth()
   const { getProductById } = useProducts()
+  const location = useLocation()
   const [searchParams] = useSearchParams()
+  const accessDenied = location.state?.accessDenied
   const newOrderId = searchParams.get('order')
 
   const [orders, setOrders] = useState([])
@@ -69,6 +71,15 @@ export default function AccountPage() {
       <p className="mb-6 text-text-muted">
         Hello, <span className="font-medium text-text-h">{fullName || profile?.email || user?.email}</span>
       </p>
+
+      {accessDenied === 'admin' && (
+        <div className="mb-5 rounded-lg border border-danger/35 bg-danger/12 px-4 py-3.5 text-danger">
+          <p className="mb-1 font-medium">Admin access required</p>
+          <p className="text-sm leading-relaxed">
+            Your account does not have permission to open the admin panel.
+          </p>
+        </div>
+      )}
 
       {newOrderId && (
         <div className="mb-5 rounded-lg border border-phosphor/35 bg-phosphor/12 px-4 py-3.5 text-phosphor">
